@@ -120,10 +120,6 @@ const register = async (req, res, next) => {
 
 module.exports = {
 	register,
-
-	authenticateSchema,
-	revokeTokenSchema,
-	registerSchema,
 	authenticate,
 	refreshTheAccessToken,
 	revokeToken,
