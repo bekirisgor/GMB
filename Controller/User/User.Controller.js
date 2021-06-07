@@ -1,4 +1,4 @@
-const joi = require('Joi');
+// const joi = require('Joi');
 
 const { UserService } = require('../../Services');
 
@@ -9,32 +9,32 @@ const {
 } = require('../../Helpers/requests');
 
 // Schemas
-const authenticateSchema = (req, res, next) => {
-	const schema = joi.object({
-		email: joi.string().required(),
-		password: joi.string().required().min(6),
-	});
-	validateRequest(req, next, schema);
-};
+// const authenticateSchema = (req, res, next) => {
+// 	const schema = joi.object({
+// 		email: joi.string().required(),
+// 		password: joi.string().required().min(6),
+// 	});
+// 	validateRequest(req, next, schema);
+// };
 
-const revokeTokenSchema = (req, res, next) => {
-	const schema = joi.object({
-		token: joi.string().empty(''),
-	});
-	validateRequest(req, next, schema);
-};
+// const revokeTokenSchema = (req, res, next) => {
+// 	const schema = joi.object({
+// 		token: joi.string().empty(''),
+// 	});
+// 	validateRequest(req, next, schema);
+// };
 
-const registerSchema = (req, res, next) => {
-	const schema = joi.object({
-		firstName: joi.string().required(),
-		lastName: joi.string().required(),
-		email: joi.string().email().required(),
-		password: joi.string().required().min(6).max(24),
-		passwordConfirmation: joi.string().required().valid(joi.ref('password')),
-		phoneNumber: joi.string().required(),
-	});
-	validateRequest(req, next, schema);
-};
+// const registerSchema = (req, res, next) => {
+// 	const schema = joi.object({
+// 		firstName: joi.string().required(),
+// 		lastName: joi.string().required(),
+// 		email: joi.string().email().required(),
+// 		password: joi.string().required().min(6).max(24),
+// 		passwordConfirmation: joi.string().required().valid(joi.ref('password')),
+// 		phoneNumber: joi.string().required(),
+// 	});
+// 	validateRequest(req, next, schema);
+// };
 
 const authenticate = async (req, res, next) => {
 	const { email, password } = req.body;

@@ -5,12 +5,12 @@ const router = require('express').Router();
 
 router.post(
 	'/register',
-	UserController.registerSchema,
+
 	UserController.register,
 );
 router.post(
 	'/login',
-	UserController.authenticateSchema,
+
 	UserController.authenticate,
 );
 

@@ -1,36 +1,36 @@
-const joi = require('joi');
+// const joi = require('joi');
 const { validateRequest } = require('../../Middlewares/ValidateRequest');
 const { LocationGroupService, LocationService } = require('../../Services');
 
-const locationDataSchema = (req, res, next) => {
-	const workingHoursSchema = joi.object({
-		open: joi.string().regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]/),
-		close: joi.string().regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]/),
-	});
-	const schema = joi.object({
-		coord: joi
-			.object({
-				type: joi.string().valid('Point'),
-				coordinates: joi.array().required(),
-			})
-			.required(),
-		phoneNumber: joi.array().items(joi.string()),
-		email: joi.string().email().required(),
-		webSite: joi.string(),
-		address: joi.object(),
-		workingHours: joi.object({
-			MONDAY: workingHoursSchema,
-			TUESDAY: workingHoursSchema,
-			WEDNESDAY: workingHoursSchema,
-			THURSDAY: workingHoursSchema,
-			FRIDAY: workingHoursSchema,
-			SATURDAY: workingHoursSchema,
-			SUNDAY: workingHoursSchema,
-		}),
-	});
-
-	validateRequest(req, next, schema);
-};
+// const locationDataSchema = (req, res, next) => {
+// 	const workingHoursSchema = joi.object({
+// 		open: joi.string().regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]/),
+// 		close: joi.string().regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]/),
+// 	});
+// 	const schema = joi.object({
+// 		coord: joi
+// 			.object({
+// 				type: joi.string().valid('Point'),
+// 				coordinates: joi.array().required(),
+// 			})
+// 			.required(),
+// 		phoneNumber: joi.array().items(joi.string()),
+// 		email: joi.string().email().required(),
+// 		webSite: joi.string(),
+// 		address: joi.object(),
+// 		workingHours: joi.object({
+// 			MONDAY: workingHoursSchema,
+// 			TUESDAY: workingHoursSchema,
+// 			WEDNESDAY: workingHoursSchema,
+// 			THURSDAY: workingHoursSchema,
+// 			FRIDAY: workingHoursSchema,
+// 			SATURDAY: workingHoursSchema,
+// 			SUNDAY: workingHoursSchema,
+// 		}),
+// 	});
+//
+// 	validateRequest(req, next, schema);
+// };
 const create = (req, res, next) => {
 	const { locationGroupID } = req.params;
 	const locationData = req.body;
