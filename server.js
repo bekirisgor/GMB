@@ -11,13 +11,12 @@ require('dotenv').config();
 
 require('./Config/expressConfig.js')(app);
 require('./Config/mongooseConfig')();
-
+require('./Routes')(app);
 //Routes
 app.use(express.static(path.join(__dirname, 'build')));
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
-require('./Routes')(app);
 
 //Error handler
 app.use(errorHandler);
