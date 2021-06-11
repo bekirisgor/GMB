@@ -22,7 +22,7 @@ const expressInitialize = (app) => {
 	app.use(function (req, res, next) {
 		res.setTimeout(50000, function () {
 			console.log('Request has timed out.');
-			res.send(408);
+			res.sendStatus(408);
 		});
 
 		next();
