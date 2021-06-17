@@ -14,6 +14,6 @@ router.post('/transfer/:locationID/:from/:to', LocationConroller.transfer);
 router.post('/bathGet/:locationGroupID', LocationConroller.batchGet);
 router.post('/findAround/:locationID', LocationConroller.findAroundCoordinate);
 router.delete('/delete/:locationGroupID/:locationID', LocationConroller.remove);
-router.post('batchDelete/:locationGroupID', LocationConroller.batchRemove);
+router.post('/batchDelete/:locationGroupID', LocationConroller.batchRemove);
 
 module.exports = router;

@@ -37,10 +37,7 @@ const LocationSchema = new Schema(
 			locality: String,
 			sublocality: String,
 			street: String,
-			no: {
-				exterior: String,
-				inteior: String,
-			},
+			no: String,
 			formattedAddress: String,
 		},
 		workingHours: {
