@@ -22,12 +22,14 @@ const LocationSchema = new Schema(
 				required: true,
 			},
 		},
+		tags: [String],
 
 		phoneNumber: Array,
 		email: {
 			type: String,
 		},
 		webSite: String,
+		note: String,
 
 		address: {
 			regionCode: String,
