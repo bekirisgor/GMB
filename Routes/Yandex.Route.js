@@ -1,9 +1,9 @@
-const { createXml } = require('../Controller/Yandex/createXML');
+const { createXML } = require('../Controller/Yandex/createXML');
 
 const router = require('express').Router();
 
 router.get('/createXML', async (req, res) => {
-	await createXml('60cf6dbf97d03327a4125cc3');
+	await createXML('', '6109405b616db2321e637f37');
 	res.send('true');
 });
 
