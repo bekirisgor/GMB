@@ -71,6 +71,17 @@ const authenticate = async ({ email, password, ipAddress, userAgent }) => {
 	};
 };
 
+const getRefreshTokenById = async (userId) => {
+	return await RefreshTokenModel.findOne({
+		user: userId,
+	})
+		.then((refreshToken) => {
+			return refreshToken;
+		})
+		.catch((error) => {
+			throw error;
+		});
+};
 const getRefreshToken = async (userId, ipAddress, userAgent) => {
 	const { browser, os, platform } = userAgent;
 	return await RefreshTokenModel.findOne({
@@ -203,6 +214,8 @@ module.exports = {
 	register,
 	refreshTheRefreshToken,
 	refreshTheAccessToken,
+	getRefreshToken,
+	getRefreshTokenById,
 	revokeToken,
 	authenticate,
 	getUserbyId,

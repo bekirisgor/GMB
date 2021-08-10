@@ -1,5 +1,6 @@
 const { create } = require('xmlbuilder2');
-const { nanoid } = require('nanoid');
+const { customAlphabet } = require('nanoid');
+const nanoid = customAlphabet('1234567890', 12);
 const fs = require('fs');
 const { getIsoTo } = require('../../Constants/conversions');
 const { getYandexCategoryId } = require('../../Constants/categoryIds');
@@ -23,14 +24,13 @@ const createXML = async (locationIds, locationGroupId) => {
 		if ('name' in data) {
 			companies.ele('name', { lang: langCode }).txt(data.name).up();
 		}
-		if (data?.platformId || data?.platformId?.yandex) {
-			companies.ele('company-id').txt(data.platformId.yandex).up();
-		} else {
-			let randomId = nanoid(12);
-			console.log(randomId);
-			companies.ele('company-id').txt(randomId).up();
-			patch(data._id, { 'platformId.yandex': randomId });
-		}
+		// if (data?.platformId || data?.platformId?.yandex) {
+		// 	companies.ele('company-id').txt(data.platformId.yandex).up();
+		// } else
+		let randomId = nanoid();
+		console.log(randomId);
+		companies.ele('company-id').txt(randomId).up();
+		patch(data._id, { 'platformId.yandex': randomId });
 
 		companies
 			.ele('coordinates')
