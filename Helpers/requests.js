@@ -11,7 +11,12 @@ const getRefreshTokenCookie = (req) => {
 	else throw Error('Unauthorized');
 };
 
+const clearRefreshTokenCookie = (res) => {
+	if ('refresh_token' in res.cookies) return res.clearCookie('refresh_token');
+};
+
 module.exports = {
 	setRefreshTokenCookie,
 	getRefreshTokenCookie,
+	clearRefreshTokenCookie,
 };

@@ -14,7 +14,6 @@ const patchLocationGroup = async (req, res, next) => {
 
 	LocationGroupService.patch(updateData)
 		.then((data) => {
-			console.log({ data });
 			res.json(data);
 		})
 		.catch(next);

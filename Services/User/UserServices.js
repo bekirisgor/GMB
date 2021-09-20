@@ -89,6 +89,7 @@ const getRefreshToken = async (userId, ipAddress, userAgent) => {
 		browser,
 		os,
 		platform,
+		revoked: '',
 	})
 		.then((refreshToken) => {
 			return refreshToken;
@@ -97,14 +98,24 @@ const getRefreshToken = async (userId, ipAddress, userAgent) => {
 			throw error;
 		});
 };
-const refreshTheAccessToken = async ({ user, refreshToken }) => {
-	const refresh_token = await RefreshTokenModel.find({
+const refreshTheAccessToken = async ({ user, refreshToken, userAgent }) => {
+	const { browser, platform, os } = userAgent;
+	const refresh_token = await RefreshTokenModel.findOne({
 		token: refreshToken,
-	}).catch((error) => {
-		throw error;
-	});
-	if (refresh_token && refresh_token.isActive) {
-		return { accessToken: generateAccessToken(user) };
+		user: user._id,
+		browser,
+		platform,
+		os,
+	})
+		.then((result) => {
+			return result;
+		})
+		.catch((error) => {
+			throw error;
+		});
+
+	if (refresh_token && refresh_token?.isActive) {
+		return { access_token: generateAccessToken(user) };
 	}
 };
 const refreshTheRefreshToken = async ({ token, ipAddress, userAgent }) => {
@@ -177,7 +188,7 @@ const randomTokenString = () => {
 
 const generateAccessToken = (user) => {
 	return jwt.sign({ sub: user.email, id: user._id }, process.env.JWT_SECRET, {
-		expiresIn: '10d',
+		expiresIn: '1h',
 	});
 };
 
@@ -187,6 +198,7 @@ const generateRefreshToken = (user, ipAddress, userAgent) => {
 		browser: userAgent.browser,
 		os: userAgent.os,
 		platform: userAgent.platform,
+		revokeToken: randomTokenString(),
 		token: randomTokenString(),
 		expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
 		createdByIp: ipAddress,

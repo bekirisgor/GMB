@@ -36,7 +36,6 @@ const batchCreate = async (locationGroupID, locationData = []) => {
 };
 
 const remove = async (locationGroupID, locationID) => {
-	console.log(locationGroupID, locationID);
 	return LocationModel.findByIdAndDelete(locationID).exec(async (err) => {
 		if (err) {
 			throw err;

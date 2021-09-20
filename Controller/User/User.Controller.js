@@ -6,6 +6,7 @@ const { validateRequest } = require('../../Middlewares/ValidateRequest');
 const {
 	setRefreshTokenCookie,
 	getRefreshTokenCookie,
+	clearRefreshTokenCookie,
 } = require('../../Helpers/requests');
 
 // Schemas
@@ -50,22 +51,37 @@ const authenticate = async (req, res, next) => {
 		.catch(next);
 };
 
-const refreshTheAccessToken = (req, res, next) => {
+const refreshTheAccessToken = async (req, res, next) => {
 	const refreshToken = getRefreshTokenCookie(req);
 	const userAgent = req.useragent;
 	const user = req.user;
-	const ipAddress = req.ip;
+	// const ipAddress = req.ip;
 
 	UserService.refreshTheAccessToken({
 		user,
 		refreshToken,
-		ipAddress,
+		// ipAddress,
 		userAgent,
 	})
-		.then(({ accessToken }) => {
-			// setRefreshTokenCookie(res, refresh_token);
-			// setRefreshTokenCookie(res, access_token);
-			res.json(accessToken);
+		.then((access_token) => res.json(access_token))
+		.catch(next);
+};
+
+const logout = async (req, res, next) => {
+	const { refresh_token, access_token, ip, user } = req;
+
+	if (!refresh_token) {
+		return res.status(401).json({ message: 'Unauthorized' });
+	}
+	await UserService.revokeToken({
+		refreshToken: refresh_token,
+		accessToken: access_token,
+		userID: user.id,
+		ipAddress: ip,
+	})
+		.then(() => {
+			res.clearCookie('refresh_token');
+			res.json({ message: 'User successfully logged out' });
 		})
 		.catch(next);
 };
@@ -92,7 +108,7 @@ const revokeToken = async (req, res, next) => {
 };
 
 const getRefreshToken = (req, res, next) => {
-	UserService.getRefreshToken(req.params.id)
+	UserService.getRefreshToken(req.params.id, req.ip, req.userAgent)
 		.then((tokens) => (tokens ? res.json(tokens) : res.sendStatus(404)))
 		.catch(next);
 };
@@ -122,6 +138,7 @@ module.exports = {
 	register,
 	authenticate,
 	refreshTheAccessToken,
+	logout,
 	revokeToken,
 	getUserbyId,
 	getRefreshToken,

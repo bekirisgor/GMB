@@ -9,10 +9,11 @@ const LocationGroupModel = model(
 	'LocationGroup',
 	require('./Location/LocationGroup.Model'),
 );
-
+const GoogleModel = model('Google', require('./Google/Google.Model'));
 module.exports = {
 	LocationModel,
 	UserModel,
 	LocationGroupModel,
 	RefreshTokenModel,
+	GoogleModel,
 };

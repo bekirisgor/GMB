@@ -2,7 +2,10 @@ const jwtExpress = require('express-jwt');
 const { jwtDecode } = require('../Helpers/Tokens');
 const { RefreshTokenModel } = require('../Model');
 const { UserService } = require('../Services');
-const { getRefreshTokenById } = require('../Services/User/UserServices');
+const {
+	getRefreshTokenById,
+	getRefreshToken,
+} = require('../Services/User/UserServices');
 
 // Parse Access token form Headers as Authorization
 const accessTokenParser = (req) => {
@@ -24,9 +27,16 @@ const authorize = () => {
 
 			req.access_token = access_token;
 			const decodedToken = jwtDecode(access_token);
+
 			const userID = decodedToken.id;
 
-			const refreshTokenObj = await getRefreshTokenById(userID);
+			const refreshTokenObj = await getRefreshToken(
+				userID,
+				req.ip,
+				req.useragent,
+			);
+
+			// const refreshTokenObj = await getRefreshTokenById(userID);
 
 			const user = await UserService.getUserbyId(userID).catch(next);
 

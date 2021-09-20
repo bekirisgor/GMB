@@ -1,11 +1,9 @@
 const { LocationGroupModel, UserModel } = require('../../Model');
 
 const create = async (locationGroupData, userID) => {
-	console.log({ locationGroupData });
 	return LocationGroupModel.create(locationGroupData)
 
 		.then((locationGroup) => {
-			console.log({ locationGroup });
 			UserModel.findByIdAndUpdate(
 				userID,
 				{
@@ -34,7 +32,6 @@ const patch = async (updateData) => {
 		});
 };
 const remove = async (groupId, userId) => {
-	console.log(groupId);
 	return await Promise.all([
 		await LocationGroupModel.findByIdAndDelete(groupId),
 		await UserModel.findByIdAndUpdate(

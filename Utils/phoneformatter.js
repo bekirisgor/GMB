@@ -3,8 +3,7 @@ const { getIsoTo } = require('../Constants/conversions');
 const yandexPhoneFormatter = (phoneNumberString = '', countryCode = 'tr') => {
 	const { prefix } = getIsoTo(countryCode);
 	var cleaned = ('' + phoneNumberString).replace(/^0+|\D/g, '');
-	console.log(prefix);
-	console.log(cleaned);
+
 	if (cleaned.length <= 10) {
 		var match = cleaned.match(/^(\d{3})(\d{3})(\d{2})(\d{2})$/);
 		if (match) {

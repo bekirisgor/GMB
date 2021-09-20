@@ -34,13 +34,12 @@ const { LocationGroupService, LocationService } = require('../../Services');
 const create = (req, res, next) => {
 	const { locationGroupID } = req.params;
 	const locationData = req.body;
-	console.log({ locationData }, { locationGroupID });
+
 	LocationService.create(locationData, locationGroupID)
 		.then((result) => {
 			res.json(result);
 		})
 		.catch(next);
-	console.log('done');
 };
 
 const remove = (req, res, next) => {
@@ -64,11 +63,9 @@ const patch = (req, res, next) => {
 };
 const list = async (req, res, next) => {
 	const { locationGroupID } = req.params;
-	console.log('params:', req.params);
 
 	LocationService.list(locationGroupID)
 		.then((result) => {
-			console.log(result);
 			res.json(result);
 		})
 		.catch(next);

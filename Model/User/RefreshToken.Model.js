@@ -9,6 +9,7 @@ const refreshTokenSchema = new Schema(
 		platform: String,
 		token: String,
 		expires: Date,
+		revokeToken: String,
 		created: {
 			type: Date,
 			default: Date.now,

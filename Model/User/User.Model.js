@@ -38,6 +38,9 @@ const UserSchema = new Schema(
 			enum: ['Admin', 'Owner', 'Manager', 'User'],
 			default: 'User',
 		},
+		google: {
+			email: String,
+		},
 		locationGroupIds: [
 			{
 				type: Schema.Types.ObjectId,
@@ -46,6 +49,7 @@ const UserSchema = new Schema(
 			},
 		],
 	},
+
 	{ timestamps: true },
 );
 
