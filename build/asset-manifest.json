@@ -4,7 +4,7 @@
     "App.js": "/static/js/App.051e9687.chunk.js",
     "Locations.js": "/static/js/Locations.1bed8c5a.chunk.js",
     "main.css": "/static/css/main.c9644418.chunk.css",
-    "main.js": "/static/js/main.1053bcee.chunk.js",
+    "main.js": "/static/js/main.56fd09d1.chunk.js",
     "runtime-main.js": "/static/js/runtime-main.b45a70a1.js",
     "views.js": "/static/js/views.5ce3a5ec.chunk.js",
     "views-app.js": "/static/js/views-app.3d643d02.chunk.js",
@@ -72,6 +72,6 @@
     "static/css/8.92d8a75d.chunk.css",
     "static/js/8.594169d9.chunk.js",
     "static/css/main.c9644418.chunk.css",
-    "static/js/main.1053bcee.chunk.js"
+    "static/js/main.56fd09d1.chunk.js"
   ]
 }
