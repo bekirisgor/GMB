@@ -121,7 +121,7 @@ const refreshTheAccessToken = async ({ user, refreshToken, userAgent }) => {
 const refreshTheRefreshToken = async ({ token, ipAddress, userAgent }) => {
 	const refreshToken = await RefreshTokenModel.findOne(
 		token,
-		ipAddress,
+
 		...userAgent,
 	);
 	const { user } = refreshToken;

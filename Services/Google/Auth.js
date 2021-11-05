@@ -1,7 +1,9 @@
 const { default: axios } = require('axios');
+const { GoogleTokenService } = require('..');
 const keys = require('../../Credentials/googleKeys.json');
+const { GoogleModel } = require('../../Model');
 
-const refreshToken = async (refreshToken) => {
+const refreshToken = async (refreshToken, userId) => {
 	return await axios
 		.request({
 			method: 'POST',
@@ -19,7 +21,7 @@ const refreshToken = async (refreshToken) => {
 			if (data && data.expires_in) {
 				token.expiry_date = new Date().getTime() + data.expires_in * 1000;
 				delete token.expires_in;
-				console.log({ token });
+				GoogleTokenService.updateGoogleTokenbyId(userId, token);
 				return token;
 			}
 		})
@@ -27,6 +29,7 @@ const refreshToken = async (refreshToken) => {
 			throw error;
 		});
 };
+
 const changeCodetoToken = async (code) => {
 	return await axios
 		.request({

@@ -2,7 +2,8 @@
 const express = require('express');
 const errorHandler = require('./Middlewares/ErrorHandle.js');
 const path = require('path');
-
+const { default: axios } = require('axios');
+const { GoogleModel } = require('./Model/index.js');
 const app = express();
 
 require('dotenv').config();
@@ -11,6 +12,7 @@ require('dotenv').config();
 
 require('./Config/expressConfig.js')(app);
 require('./Config/mongooseConfig')();
+require('./Config/config');
 require('./Routes')(app);
 //Routes
 app.use(express.static(path.join(__dirname, 'build')));

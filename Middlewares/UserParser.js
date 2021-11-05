@@ -13,7 +13,7 @@ const userParser = async (req, res, next) => {
 	const userID = decodedToken.id;
 	const refreshToken = await getRefreshToken(userID, req.ip, req.useragent);
 	const user = await UserService.getUserbyId(userID).catch(next);
-	console.log({ user }, { refreshToken });
+
 	if (user && refreshToken?.isActive) {
 		req.user = user;
 	} else {
