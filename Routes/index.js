@@ -9,7 +9,7 @@ const { googleTokenMiddleware } = require('../Middlewares/GoogleToken');
 
 module.exports = (app) => {
 	app.use('/api/user', User);
-	app.use('/api/google', Google);
+	app.use('/api/google', authorize(), Google);
 	app.use('/api/locationGroup', authorize(), LocationGroup);
 	app.use('/api/location', authorize(), Location);
 	app.use('/api/yandex', Yandex);

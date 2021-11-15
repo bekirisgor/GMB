@@ -7,7 +7,7 @@ router.patch('/', LocationGroupController.patchLocationGroup);
 // router.patch('/', (req, res) => {
 // 	console.log(req.body);
 // });
-router.get('/get/:groupID', LocationGroupController.getLocationGroup);
+router.get('/get', LocationGroupController.getLocationGroup);
 router.get('/list', LocationGroupController.listLocationGroup);
 router.delete('/', LocationGroupController.deleteLocationGroup);
 

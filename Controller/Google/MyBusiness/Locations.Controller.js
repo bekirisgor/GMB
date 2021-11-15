@@ -12,8 +12,9 @@ const matchLocations = async (req, res, next) => {
 		!req.query.locationGroupId ||
 		!req.query.googleLocationGroupId ||
 		!req.token.access_token
-	)
-		res.status(400).json({ message: 'Missing query' });
+	) {
+		return res.status(400).json({ message: 'Missing query' });
+	}
 
 	const { locationGroupId, googleLocationGroupId } = req.query;
 
@@ -23,29 +24,18 @@ const matchLocations = async (req, res, next) => {
 		googleLocationGroupId,
 		req.token.access_token,
 	);
-	// .then(async (res) => {
-	// 	console.log({ res });
-	// 	return await Promise.all(
-	// 		res.slice(0, 10).map(async (gEl) => {
-	// 			if (!gEl.latlng) {
-	// 				const details = await getDetailsFromPlaceid(gEl.metadata.placeId);
-	// 				console.log({ details });
-	// 				return {
-	// 					...gEl,
-	// 					geometry: details.result.geometry.location,
-	// 				};
-	// 			}
-	// 			return gEl;
-	// 		}),
-	// 	);
-	// })
-	// .catch(next);
 
 	const google = await Promise.all(
 		googleLocations.map(async (el) => {
 			if (!el.latlng) {
 				const details = await getDetailsFromPlaceid(el.metadata.placeId);
-				console.log({ ...el, geometry: { ...details } });
+				await GoogleLocationsService.patchGoogleLocation(el.name, 'latlng', {
+					latlng: {
+						latitude: details.geometry.lat,
+						longitude: details.geometry.lng,
+					},
+				});
+
 				return { ...el, geometry: details };
 			}
 			return el;
@@ -88,4 +78,81 @@ const matchLocations = async (req, res, next) => {
 	// return { locations: dbLocations, googleLocations: googleLocations };
 };
 
-module.exports = { matchLocations };
+const matchLocation = async (req, res, next) => {
+	// if (!req.query.locationId || !req.query.googleLocationGroupId) {
+	// 	res.status(400).json({ message: 'Missing query' });
+	// }
+
+	if (!req.token?.access_token) {
+		return res.status(401).json({ message: 'Access token missing' });
+	}
+	const { locationId, googleLocationGroupId } = req.query;
+	const { access_token } = req.token;
+	const refLocation = await LocationService.get(locationId);
+
+	const googleLocations = await GoogleLocationsService.listGoogleLocations(
+		googleLocationGroupId,
+		access_token,
+	);
+
+	// const googleLocations = await Promise.all(
+	// 	googleLocationsRaw.map(async (el) => {
+	// 		if (!el.latlng) {
+	// 			const details = await getDetailsFromPlaceid(el.metadata.placeId).catch(
+	// 				next,
+	// 			);
+
+	// 			// await GoogleLocationsService.patchGoogleLocation(
+	// 			// 	el.name,
+	// 			// 	'latlng.latitude,latlng.longitude,storefrontAddress',
+
+	// 			// 	{
+	// 			// 		latlng: {
+	// 			// 			latitude: details.lat,
+	// 			// 			longitude: details.lng,
+	// 			// 		},
+	// 			// 		storefrontAddress: el.storefrontAddress,
+	// 			// 	},
+	// 			// 	access_token,
+	// 			// )
+	// 			// 	.then((res) => {
+	// 			// 		console.log('data', res.data);
+	// 			// 	})
+	// 			// 	.catch((error) => {
+	// 			// 		console.log({ error });
+	// 			// 	});
+	// 			return {
+	// 				...el,
+	// 				latlng: {
+	// 					latitude: details.lat,
+	// 					longitude: details.lng,
+	// 				},
+	// 			};
+	// 		}
+	// 		return el;
+	// 	}),
+	// );
+
+	const maxDistance = 1;
+	const matched = [];
+	console.time('asd');
+	googleLocations.map((gEl) => {
+		if (gEl.latlng) {
+			const distance = calcDistance(
+				refLocation.coord.coordinates[1],
+				refLocation.coord.coordinates[0],
+				gEl.latlng.latitude,
+				gEl.latlng.longitude,
+			);
+			if (distance < maxDistance) {
+				matched.push({ name: gEl.name, distance, data: gEl });
+			}
+		}
+		matched.sort((a, b) => a.distance - b.distance);
+	});
+	console.timeEnd('asd');
+
+	return res.status(200).json(matched);
+};
+
+module.exports = { matchLocations, matchLocation };

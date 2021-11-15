@@ -7,6 +7,11 @@ const LocationGroupSchema = new Schema(
 			type: String,
 			unique: true,
 		},
+		platformId: {
+			google: { type: String },
+			yandex: { type: String },
+			facebook: { type: String },
+		},
 		phoneNumber: String,
 		email: {
 			type: String,

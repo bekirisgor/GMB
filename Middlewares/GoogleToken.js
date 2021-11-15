@@ -6,19 +6,19 @@ const googleTokenMiddleware = async (req, res, next) => {
 	const token = await GoogleTokenService.findTokenById(userId);
 	// console.log({ token });
 
-	if (token && token.access_token && token.expiry_date > new Date().getTime())
+	if (token && token.access_token && token.expiry_date > new Date().getTime()) {
 		req.token = token;
-	else {
-		refreshToken(token.refresh_token, userId)
-			.then(() => {
-				req.token = token;
+		next();
+	} else {
+		await refreshToken(token.refresh_token, userId)
+			.then((response) => {
+				req.token = response;
+				next();
 			})
 			.catch((error) => {
-				res.status(500).send(error);
+				return res.status(500).send(error);
 			});
 	}
-
-	next();
 };
 
 module.exports = { googleTokenMiddleware };

@@ -11,8 +11,9 @@ const createLocationGroup = async (req, res, next) => {
 };
 const patchLocationGroup = async (req, res, next) => {
 	const updateData = req.body;
+	const { groupID } = req.query || updateData._id;
 
-	LocationGroupService.patch(updateData)
+	LocationGroupService.patch(groupID, updateData)
 		.then((data) => {
 			res.json(data);
 		})
@@ -37,7 +38,7 @@ const listLocationGroup = (req, res, next) => {
 		.catch(next);
 };
 const getLocationGroup = (req, res, next) => {
-	const { groupID } = req.params;
+	const { groupID } = req.query;
 	LocationGroupService.get(groupID)
 		.then((data) => {
 			res.json(data);

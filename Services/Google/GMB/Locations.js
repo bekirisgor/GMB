@@ -31,4 +31,29 @@ const listGoogleLocations = async (locationGroupId, token, mask) => {
 	return locations;
 };
 
-module.exports = { listGoogleLocations };
+const patchGoogleLocation = async (
+	locationId,
+	updateMask,
+	locationData,
+	token,
+) => {
+	console.log({ token });
+	await axios
+		.request({
+			method: 'patch',
+			url: `https://mybusinessbusinessinformation.googleapis.com/v1/${locationId}`,
+			headers: { Authorization: `Bearer ${token}` },
+
+			params: {
+				updateMask,
+			},
+			data: locationData,
+		})
+		.then((res) => {
+			return res.data;
+		})
+		.catch((error) => {
+			throw error;
+		});
+};
+module.exports = { listGoogleLocations, patchGoogleLocation };

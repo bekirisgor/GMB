@@ -84,13 +84,16 @@ const batchRemove = async (locationGroupID, locationID = []) => {
 	});
 };
 
-const patch = async (locationID, patchData) => {
-	return await LocationModel.findByIdAndUpdate(locationID, patchData, {
-		$set: patchData,
-		new: true,
-	})
-		.exec()
+const patch = (locationID, patchData) => {
+	return LocationModel.findByIdAndUpdate(
+		locationID,
+		{ $set: { ...patchData } },
+		{
+			new: true,
+		},
+	)
 		.then((doc) => {
+			if (!doc) throw new Error('Null');
 			return doc;
 		})
 		.catch((error) => {

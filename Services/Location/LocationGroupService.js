@@ -19,12 +19,19 @@ const create = async (locationGroupData, userID) => {
 		});
 };
 
-const patch = async (updateData) => {
-	return LocationGroupModel.findByIdAndUpdate(updateData._id, updateData, {
-		new: true,
-		$set: updateData,
-	})
+const patch = async (groupID, updateData) => {
+	return LocationGroupModel.findByIdAndUpdate(
+		groupID,
+		{ $set: { ...updateData } },
+		{
+			new: true,
+		},
+	)
 		.then((doc) => {
+			if (!doc) {
+				throw new Error('Null');
+			}
+			console.log({ doc });
 			return doc;
 		})
 		.catch((error) => {

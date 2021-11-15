@@ -33,7 +33,6 @@ const updateGoogleTokenbyId = (userId, token) => {
 const getTokenbyTokenId = (tokenId) => {
 	return GoogleModel.findById(tokenId, (err, doc) => {
 		if (err) throw err;
-		console.log({ doc });
 		return doc;
 	});
 };
