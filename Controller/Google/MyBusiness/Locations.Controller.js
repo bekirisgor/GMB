@@ -89,12 +89,12 @@ const matchLocation = async (req, res, next) => {
 	const { locationId, googleLocationGroupId } = req.query;
 	const { access_token } = req.token;
 	const refLocation = await LocationService.get(locationId);
-
+	console.time('a');
 	const googleLocations = await GoogleLocationsService.listGoogleLocations(
 		googleLocationGroupId,
 		access_token,
 	);
-
+	console.timeEnd('a');
 	// const googleLocations = await Promise.all(
 	// 	googleLocationsRaw.map(async (el) => {
 	// 		if (!el.latlng) {
@@ -135,7 +135,7 @@ const matchLocation = async (req, res, next) => {
 
 	const maxDistance = 1;
 	const matched = [];
-	console.time('asd');
+
 	googleLocations.map((gEl) => {
 		if (gEl.latlng) {
 			const distance = calcDistance(
