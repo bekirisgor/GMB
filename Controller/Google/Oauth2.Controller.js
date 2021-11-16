@@ -40,17 +40,20 @@ const refreshToken = async (req, res, next) => {
 
 	const google = await GoogleModel.findOne({ user: user._id })
 		.then((doc) => {
+			if (!doc)
+				return res.status(401).json({ message: 'User has no refresh token' });
+
 			return doc;
 		})
 		.catch((error) => {
 			res.status(401).json({ message: 'User has no refresh token' });
 		});
 	if (google.access_token && new Date().getTime() < google.expiry_date) {
-		res.status(200).json(google);
+		return res.status(200).json(google);
 	}
 	const token = await Google.refreshToken(google.refresh_token, user._id);
 
-	res.status(201).json(token);
+	return res.status(201).json(token);
 };
 
 const tokenforInsight = async (req, res, next) => {
