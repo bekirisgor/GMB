@@ -58,10 +58,12 @@ const remove = async (groupId, userId) => {
 		});
 };
 const listAll = async (userID) => {
+	console.log({ userID });
 	return UserModel.findById(userID)
 		.populate('locationGroupIds')
 		.select('locationGroupIDs')
 		.then((result) => {
+			console.log({ result });
 			return result;
 		})
 		.catch((error) => {

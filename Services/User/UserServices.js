@@ -175,7 +175,6 @@ const getUserbyId = async (id) => {
 	if (!isValidObjectId(id)) throw 'User has not found';
 	console.time('a');
 	const user = await UserModel.findById(id, '-password -__v')
-		.lean()
 		.exec()
 
 		.then((user) => {

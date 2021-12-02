@@ -31,6 +31,7 @@ const deleteLocationGroup = (req, res, next) => {
 };
 const listLocationGroup = (req, res, next) => {
 	const userID = req.user.id;
+	console.log(req.user);
 	LocationGroupService.listAll(userID)
 		.then((data) => {
 			res.json(data);

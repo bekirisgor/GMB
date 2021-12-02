@@ -23,5 +23,3 @@ app.get('*', (req, res) => {
 
 //Error handler
 app.use(errorHandler);
-
-// require('./Tests/mongoTest')();
