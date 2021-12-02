@@ -12,9 +12,11 @@ const create = async (locationData, locationGroupID) => {
 					$push: { locations: doc._id },
 				},
 				{ timestamps: false },
-			).exec((error) => {
-				if (error) throw error;
-			});
+			)
+				.lean()
+				.exec((error) => {
+					if (error) throw error;
+				});
 			return doc;
 		})
 		.catch((error) => {
@@ -27,6 +29,7 @@ const batchCreate = async (locationGroupID, locationData = []) => {
 		parentId: locationGroupID,
 	}));
 	return await LocationModel.insertMany(batchData)
+		.lean()
 		.then((doc) => {
 			return doc;
 		})
@@ -36,20 +39,22 @@ const batchCreate = async (locationGroupID, locationData = []) => {
 };
 
 const remove = async (locationGroupID, locationID) => {
-	return LocationModel.findByIdAndDelete(locationID).exec(async (err) => {
-		if (err) {
-			throw err;
-		}
-		await LocationGroupModel.findByIdAndUpdate(
-			locationGroupID,
-			{ $pull: { locations: { $in: [locationID] } } },
-			{ timestamps: false },
-		).catch((error) => {
-			throw error;
-		});
+	return LocationModel.findByIdAndDelete(locationID)
+		.lean()
+		.exec(async (err) => {
+			if (err) {
+				throw err;
+			}
+			await LocationGroupModel.findByIdAndUpdate(
+				locationGroupID,
+				{ $pull: { locations: { $in: [locationID] } } },
+				{ timestamps: false },
+			).catch((error) => {
+				throw error;
+			});
 
-		return 'ok';
-	});
+			return 'ok';
+		});
 
 	// return await Promise.all([
 	// 	await LocationModel.findByIdAndDelete(locationID),
@@ -66,22 +71,25 @@ const remove = async (locationGroupID, locationID) => {
 };
 
 const batchRemove = async (locationGroupID, locationID = []) => {
-	return LocationModel.deleteMany(locationID).exec((err, doc) => {
-		if (err) {
-			throw err;
-		}
-		LocationGroupModel.findByIdAndUpdate(locationGroupID, {
-			$pull: { id: { $in: locationID } },
-		})
+	return LocationModel.deleteMany(locationID)
+		.lean()
+		.exec((err, doc) => {
+			if (err) {
+				throw err;
+			}
+			LocationGroupModel.findByIdAndUpdate(locationGroupID, {
+				$pull: { id: { $in: locationID } },
+			})
+				.lean()
 
-			.in(locationGroupID)
-			.exec((err) => {
-				if (err) {
-					throw err;
-				}
-				return doc;
-			});
-	});
+				.in(locationGroupID)
+				.exec((err) => {
+					if (err) {
+						throw err;
+					}
+					return doc;
+				});
+		});
 };
 
 const patch = (locationID, patchData) => {
@@ -92,6 +100,7 @@ const patch = (locationID, patchData) => {
 			new: true,
 		},
 	)
+		.lean()
 		.then((doc) => {
 			if (!doc) throw new Error('Null');
 			return doc;
@@ -123,6 +132,7 @@ const transfer = async (locationID, fromGroupID, toGroupID) => {
 		},
 		{ timestamps: false },
 	)
+		.lean()
 		.then(
 			await LocationGroupModel.findByIdAndUpdate(
 				toGroupID,
@@ -132,6 +142,7 @@ const transfer = async (locationID, fromGroupID, toGroupID) => {
 				{ timestamps: false },
 			),
 		)
+		.lean()
 		.then((doc) => {
 			return doc;
 		})
@@ -156,6 +167,7 @@ const batchGet = async (locationGroupID, locationIDs = []) => {
 	return await LocationModel.find()
 		.where('_id')
 		.in(locationIDs)
+		.lean()
 		.exec()
 		.then((doc) => {
 			return doc;

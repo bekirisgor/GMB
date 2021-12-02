@@ -10,7 +10,9 @@ const create = async (locationGroupData, userID) => {
 					$push: { locationGroupIds: [locationGroup._id] },
 				},
 				{ timestamps: false },
-			).exec();
+			)
+				.lean()
+				.exec();
 			return locationGroup;
 		})
 
@@ -27,6 +29,7 @@ const patch = async (groupID, updateData) => {
 			new: true,
 		},
 	)
+		.lean()
 		.then((doc) => {
 			if (!doc) {
 				throw new Error('Null');
@@ -40,12 +43,12 @@ const patch = async (groupID, updateData) => {
 };
 const remove = async (groupId, userId) => {
 	return await Promise.all([
-		await LocationGroupModel.findByIdAndDelete(groupId),
+		await LocationGroupModel.findByIdAndDelete(groupId).lean(),
 		await UserModel.findByIdAndUpdate(
 			userId,
 			{ $pull: { locationGroupIds: { $in: [groupId] } } },
 			{ timestamps: false },
-		),
+		).lean(),
 	])
 		.then((result) => {
 			return result;
@@ -55,10 +58,9 @@ const remove = async (groupId, userId) => {
 		});
 };
 const listAll = async (userID) => {
-	return await UserModel.findById(userID)
+	return UserModel.findById(userID)
 		.populate('locationGroupIds')
 		.select('locationGroupIDs')
-
 		.then((result) => {
 			return result;
 		})
@@ -67,9 +69,11 @@ const listAll = async (userID) => {
 		});
 };
 const get = async (groupID) => {
-	return await LocationGroupModel.findById(groupID).catch((error) => {
-		throw error;
-	});
+	return await LocationGroupModel.findById(groupID)
+		.lean()
+		.catch((error) => {
+			throw error;
+		});
 };
 
 module.exports = { create, patch, remove, listAll, get };

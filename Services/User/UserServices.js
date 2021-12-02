@@ -13,7 +13,7 @@ const getByEmail = async (email) => {
 		if (error) {
 			throw error;
 		}
-	});
+	})();
 };
 
 const register = async (data) => {
@@ -25,7 +25,7 @@ const register = async (data) => {
 		delete data.passwordConfirmation;
 
 		return await UserModel(data)
-			.save()
+			.save()()
 			.then((user) => {
 				return _.pick(user, [
 					'firstName',
@@ -75,6 +75,7 @@ const getRefreshTokenById = async (userId) => {
 	return await RefreshTokenModel.findOne({
 		user: userId,
 	})
+
 		.then((refreshToken) => {
 			return refreshToken;
 		})
@@ -107,6 +108,7 @@ const refreshTheAccessToken = async ({ user, refreshToken, userAgent }) => {
 		platform,
 		os,
 	})
+
 		.then((result) => {
 			return result;
 		})
@@ -159,6 +161,7 @@ const revokeToken = async ({
 			revokedAccessToken: accessToken,
 		},
 	)
+
 		.then((refreshToken) => {
 			if (!refreshToken) throw new Error('Token cannot found');
 			return refreshToken;
@@ -170,15 +173,18 @@ const revokeToken = async ({
 
 const getUserbyId = async (id) => {
 	if (!isValidObjectId(id)) throw 'User has not found';
+	console.time('a');
 	const user = await UserModel.findById(id, '-password -__v')
+		.lean()
 		.exec()
+
 		.then((user) => {
 			return user;
 		})
 		.catch((error) => {
 			throw error;
 		});
-
+	console.timeEnd('a');
 	return user;
 };
 
@@ -204,6 +210,7 @@ const generateRefreshToken = (user, ipAddress, userAgent) => {
 		createdByIp: ipAddress,
 	})
 		.save()
+
 		.then((token) => {
 			return token;
 		});

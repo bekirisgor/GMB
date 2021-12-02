@@ -5,7 +5,7 @@ const LocationGroupSchema = new Schema(
 		// _id: Number,
 		name: {
 			type: String,
-			unique: true,
+			required: true,
 		},
 		platformId: {
 			google: { type: String },

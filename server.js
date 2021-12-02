@@ -14,6 +14,7 @@ require('./Config/expressConfig.js')(app);
 require('./Config/mongooseConfig')();
 require('./Config/config');
 require('./Routes')(app);
+
 //Routes
 app.use(express.static(path.join(__dirname, 'build')));
 app.get('*', (req, res) => {
